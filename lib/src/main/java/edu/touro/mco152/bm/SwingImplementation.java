@@ -3,19 +3,31 @@ package edu.touro.mco152.bm;
 import edu.touro.mco152.bm.ui.Gui;
 
 import javax.swing.*;
+import java.beans.PropertyChangeListener;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 
 import static edu.touro.mco152.bm.App.dataDir;
 
-public class SwingImplementation<T> extends SwingWorker<Boolean, DiskMark> implements GUIInterface{
+public class SwingImplementation extends SwingWorker<Boolean, DiskMark> implements GUIInterface{
+    DiskWorker diskWorker;
     Boolean lastStatus = null;
+    SwingImplementation(){
+        diskWorker = new DiskWorker();
+    }
     @Override
     public boolean isBMCancelled() {
+        boolean canc = isCancelled();
+        System.out.println("Canc " + canc);
         return isCancelled();
     }
+    @Override
+    public void cancelBM(boolean bool) {
 
+       cancel(bool);
+
+    }
     @Override
     public void setBMProgress(int i) {
 
@@ -52,7 +64,7 @@ public class SwingImplementation<T> extends SwingWorker<Boolean, DiskMark> imple
     public boolean getStatus() {
 
         try {
-            lastStatus =   super.get();
+            lastStatus = get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -61,7 +73,18 @@ public class SwingImplementation<T> extends SwingWorker<Boolean, DiskMark> imple
 return lastStatus;
     }
 
-  @Override
+
+    @Override
+    public void executeBM(){
+        execute();
+    }
+
+    @Override
+    public void addPropertyChangeListenerBM(PropertyChangeListener listener) {
+        addPropertyChangeListener(listener);
+    }
+
+    @Override
     protected void process(List<DiskMark> markList) {
 
                 markList.stream().forEach((dm) -> {
@@ -73,11 +96,11 @@ return lastStatus;
                 });
     }
 
-
-
     @Override
     protected Boolean doInBackground() throws Exception {
-        return null;
+
+       return diskWorker.doWork();
+
     }
     @Override
     protected void done(){

@@ -38,13 +38,15 @@ import static edu.touro.mco152.bm.DiskMark.MarkType.WRITE;
  */
 // extends SwingWorker<Boolean, DiskMark>
 public class DiskWorker  {
-GUIInterface guiInterface = new SwingImplementation();
+
     // Record any success or failure status returned from SwingWorker (might be us or super)
     //Boolean lastStatus = null;  // so far unknown
+    GUIInterface guiInterface;
 
 
     protected Boolean doWork() throws Exception {
-
+        guiInterface = worker;
+        //GUIInterface guiInterface = new SwingImplementation();
         /*
           We 'got here' because: 1: End-user clicked 'Start' on the benchmark UI,
           which triggered the start-benchmark event associated with the App::startBenchmark()
