@@ -1,10 +1,7 @@
 package edu.touro.mco152.bm;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.List;
 import java.util.concurrent.Callable;
-
 public interface GUIInterface  {
     /**
      Checks if the benchmarking has been cancelled.
@@ -19,8 +16,8 @@ public interface GUIInterface  {
     void setBMProgress(int i);
 
     /**
-     * Displays
-     * @param mark
+     * Displays benchmark information.
+     * @param mark a DiskMark chunk of benchmark checking to be displayed or processed.
      */
     void publishToUI(DiskMark mark);
     /**
@@ -52,7 +49,7 @@ public interface GUIInterface  {
      *Adds a PropertyChangeListener to the listener list. The listener is registered for all properties.
      * The same listener object may be added more than once, and will be called as many times as it is added.
      * If listener is null, no exception is thrown and no action is taken.
-     * @param listener
+     * @param listener the PropertyChangeListener to be added
      */
     void addPropertyChangeListenerBM(PropertyChangeListener listener);
 
