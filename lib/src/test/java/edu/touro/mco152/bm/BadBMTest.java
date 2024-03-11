@@ -1,28 +1,22 @@
 package edu.touro.mco152.bm;
 
-
 import edu.touro.mco152.bm.ui.Gui;
 import edu.touro.mco152.bm.ui.MainFrame;
 import org.junit.jupiter.api.Assertions;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Properties;
 
-
 public class BadBMTest {
-
+    // Instantiate a DiskWorker of Non-Swing Type
     DiskWorker worker = new DiskWorker(new NonSwingImplementation());
+    // Create a cast of Non-Swing Implementation to access non-overridden methods in NonSwingImplementation class
     NonSwingImplementation currUI = (NonSwingImplementation) worker.guiInterface;
 
     @Test
     void progress(){
-
         worker.guiInterface.executeBM();
         ArrayList<Integer> percentList = currUI.getPercentList();
         for (Integer integer : percentList) {
@@ -31,7 +25,6 @@ public class BadBMTest {
     }
     @Test
     void finished(){
-
         worker.guiInterface.executeBM();
        Assertions.assertTrue(currUI.lastStatus);
     }
@@ -82,14 +75,4 @@ public class BadBMTest {
             App.dataDir.mkdirs(); // create data dir if not already present
         }
     }
-
-//    @ParameterizedTest
-//    @ValueSource(booleans = {true, false})
-//    void cancelTest(boolean booleans){
-////        SwingImplementation sw = new SwingImplementation();
-////        sw.cancel(booleans);
-////        Assertions.assertTrue(sw.isBMCancelled());
-//    }
-
-
 }

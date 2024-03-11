@@ -57,8 +57,6 @@ public class NonSwingImplementation implements GUIInterface {
 
     }
 
-
-
     @Override
     public void executeBM() {
 
@@ -77,5 +75,6 @@ public class NonSwingImplementation implements GUIInterface {
     @Override
     public void setWork(Callable<Boolean> bool) {
         callable = bool;
+        System.out.println("bool1 "+bool);
     }
 }

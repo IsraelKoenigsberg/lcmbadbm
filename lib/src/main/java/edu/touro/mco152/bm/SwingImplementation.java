@@ -32,6 +32,11 @@ public class SwingImplementation extends SwingWorker<Boolean, DiskMark> implemen
         setProgress(i);
     }
 
+    /**
+     * Sends data chunks to the process method. This method is to be used from inside the doInBackground method to
+     * deliver intermediate results for processing on the Event Dispatch Thread inside the process method.
+     * @param mark - intermediate results to process
+     */
     @Override
     public void publishToUI(DiskMark mark) {
         publish(mark);
@@ -86,7 +91,11 @@ return lastStatus;
     public void setWork(Callable<Boolean> bool) {
         callable = bool;
     }
-
+    /**
+     * Process a list of 'chunks' that have been processed, ie that our thread has previously
+     * published to Swing.
+     * @param markList a list of DiskMark objects reflecting some completed benchmarks
+     */
     @Override
     protected void process(List<DiskMark> markList) {
 
