@@ -5,21 +5,19 @@ import edu.touro.mco152.bm.ui.Gui;
 import javax.swing.*;
 import java.beans.PropertyChangeListener;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 
 import static edu.touro.mco152.bm.App.dataDir;
 
 public class SwingImplementation extends SwingWorker<Boolean, DiskMark> implements GUIInterface{
-    DiskWorker diskWorker;
+
     Boolean lastStatus = null;
-    SwingImplementation(){
-        diskWorker = new DiskWorker();
-    }
+    Callable<Boolean> callable;
+
     @Override
     public boolean isBMCancelled() {
-        boolean canc = isCancelled();
-        System.out.println("Canc " + canc);
         return isCancelled();
     }
     @Override
@@ -85,6 +83,11 @@ return lastStatus;
     }
 
     @Override
+    public void setWork(Callable<Boolean> bool) {
+        callable = bool;
+    }
+
+    @Override
     protected void process(List<DiskMark> markList) {
 
                 markList.stream().forEach((dm) -> {
@@ -98,8 +101,8 @@ return lastStatus;
 
     @Override
     protected Boolean doInBackground() throws Exception {
+       return callable.call();
 
-       return diskWorker.doWork();
 
     }
     @Override
