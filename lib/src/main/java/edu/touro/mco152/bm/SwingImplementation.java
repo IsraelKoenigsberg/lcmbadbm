@@ -5,21 +5,19 @@ import edu.touro.mco152.bm.ui.Gui;
 import javax.swing.*;
 import java.beans.PropertyChangeListener;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 
 import static edu.touro.mco152.bm.App.dataDir;
 
 public class SwingImplementation extends SwingWorker<Boolean, DiskMark> implements GUIInterface{
-    DiskWorker diskWorker;
+
     Boolean lastStatus = null;
-    SwingImplementation(){
-        diskWorker = new DiskWorker();
-    }
+    Callable<Boolean> callable;
+
     @Override
     public boolean isBMCancelled() {
-        boolean canc = isCancelled();
-        System.out.println("Canc " + canc);
         return isCancelled();
     }
     @Override
@@ -34,6 +32,11 @@ public class SwingImplementation extends SwingWorker<Boolean, DiskMark> implemen
         setProgress(i);
     }
 
+    /**
+     * Sends data chunks to the process method. This method is to be used from inside the doInBackground method to
+     * deliver intermediate results for processing on the Event Dispatch Thread inside the process method.
+     * @param mark - intermediate results to process
+     */
     @Override
     public void publishToUI(DiskMark mark) {
         publish(mark);
@@ -85,6 +88,15 @@ return lastStatus;
     }
 
     @Override
+    public void setWork(Callable<Boolean> bool) {
+        callable = bool;
+    }
+    /**
+     * Process a list of 'chunks' that have been processed, ie that our thread has previously
+     * published to Swing.
+     * @param markList a list of DiskMark objects reflecting some completed benchmarks
+     */
+    @Override
     protected void process(List<DiskMark> markList) {
 
                 markList.stream().forEach((dm) -> {
@@ -98,8 +110,8 @@ return lastStatus;
 
     @Override
     protected Boolean doInBackground() throws Exception {
+       return callable.call();
 
-       return diskWorker.doWork();
 
     }
     @Override
