@@ -1,20 +1,32 @@
 package edu.touro.mco152.bm;
 
-
 import edu.touro.mco152.bm.ui.Gui;
 import edu.touro.mco152.bm.ui.MainFrame;
-import org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Properties;
 
 public class BadBMTest {
+    // Instantiate a DiskWorker of Non-Swing Type
+    DiskWorker worker = new DiskWorker(new NonSwingImplementation());
+    // Create a cast of Non-Swing Implementation to access non-overridden methods in NonSwingImplementation class
+    NonSwingImplementation currUI = (NonSwingImplementation) worker.guiInterface;
 
     @Test
     void progress(){
-    setupDefaultAsPerProperties();
-
+        worker.guiInterface.executeBM();
+        ArrayList<Integer> percentList = currUI.getPercentList();
+        for (Integer integer : percentList) {
+            Assertions.assertTrue(integer <= 100 && integer >= 0);
+        }
+    }
+    @Test
+    void finished(){
+        worker.guiInterface.executeBM();
+       Assertions.assertTrue(currUI.lastStatus);
     }
 
     /**
@@ -27,7 +39,8 @@ public class BadBMTest {
      *
      * @author lcmcohen
      */
-    private static void setupDefaultAsPerProperties()
+    @BeforeAll
+    public static void setupDefaultAsPerProperties()
     {
         /// Do the minimum of what  App.init() would do to allow to run.
         Gui.mainFrame = new MainFrame();
@@ -62,5 +75,4 @@ public class BadBMTest {
             App.dataDir.mkdirs(); // create data dir if not already present
         }
     }
-
 }

@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  * Contains the main runnable method of the program.
  * Primary holder of global variables.
  * Responsible for changing properties configurations.
- * Initiates the custom Swing benchmark handling class. {@link DiskWorker}//
+ * Initiates the custom Swing benchmark handling class. {@link DiskWorker}
  */
 public class App {
 
@@ -48,7 +48,7 @@ public class App {
     public static int numOfMarks = 25;      // desired number of marks
     public static int numOfBlocks = 32;     // desired number of blocks
     public static int blockSizeKb = 512;    // size of a block in KBs
-    public static GUIInterface worker = null;
+    public static DiskWorker worker = null;
     public static int nextMarkNumber = 1;   // number of the next mark
     public static double wMax = -1, wMin = -1, wAvg = -1;
     public static double rMax = -1, rMin = -1, rAvg = -1;
@@ -244,7 +244,7 @@ public class App {
             return;
         }
 
-        worker.cancelBM(true);
+        worker.guiInterface.cancelBM(true);
     }
 
     /**
@@ -270,8 +270,9 @@ public class App {
         Gui.mainFrame.adjustSensitivity();
 
         //4. set up disk worker thread and its event handlers
-        worker = new SwingImplementation();
-        worker.addPropertyChangeListenerBM((final PropertyChangeEvent event) -> {
+        worker = new DiskWorker(new SwingImplementation());
+
+        worker.guiInterface.addPropertyChangeListenerBM((final PropertyChangeEvent event) -> {
             switch (event.getPropertyName()) {
                 case "progress":
                     int value = (Integer) event.getNewValue();
@@ -292,12 +293,9 @@ public class App {
         });
 
         //5. start the Swing worker thread
-
-        worker.executeBM();
+        worker.guiInterface.executeBM();
     }
-     public GUIInterface getImplementation(){
-        return worker;
-     }
+
     /**
      * Set up data area for use by temp benchmark files. Will try to use configured area,
      * if not available, will use opsys temp area
