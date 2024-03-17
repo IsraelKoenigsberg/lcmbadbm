@@ -58,15 +58,14 @@ public class Util {
 
         // nextInt is normally exclusive of the top value,
         // so add 1 to make it inclusive
-
         return rand.nextInt((max - min) + 1) + min;
+
     }
 
 
     public static String displayString(double num) {
         return DF.format(num);
     }
-
 
     /**
      * Get OS specific disk info based on the drive the path is mapped to.
