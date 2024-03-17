@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="edu.touro.mco152.bm.UtilTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-03-17T03:00:26" hostname="DESKTOP-PF9V05E" time="0.001">
-  <properties/>
-  <testcase name="randIntTest()" classname="edu.touro.mco152.bm.UtilTest" time="0.001"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

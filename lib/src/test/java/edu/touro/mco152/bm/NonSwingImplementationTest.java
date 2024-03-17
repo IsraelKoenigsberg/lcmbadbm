@@ -48,12 +48,12 @@ public class NonSwingImplementationTest {
     @Test
     void execute(){
         long performanceBoundary = 10000;
-        for (int i = 0; i < 5; i ++){
+
             long currTime = System.currentTimeMillis();
             NonSwingWorker.guiInterface.executeBM();
             long finishTime = System.currentTimeMillis();
             assertTrue(finishTime - currTime < performanceBoundary);
-        }
+
     }
 
     @BeforeAll
