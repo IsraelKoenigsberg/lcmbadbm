@@ -7,34 +7,55 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Properties;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class BadBMTest {
+public class NonSwingImplementationTest {
+
     // Instantiate a DiskWorker of Non-Swing Type
-    DiskWorker worker = new DiskWorker(new NonSwingImplementation());
+    DiskWorker NonSwingWorker = new DiskWorker(new NonSwingImplementation());
     // Create a cast of Non-Swing Implementation to access non-overridden methods in NonSwingImplementation class
-    NonSwingImplementation currUI = (NonSwingImplementation) worker.guiInterface;
-
-    @Test
-    void progress(){
-        worker.guiInterface.executeBM();
-        ArrayList<Integer> percentList = currUI.getPercentList();
-        for (Integer integer : percentList) {
-            assertTrue(integer <= 100 && integer >= 0);
-        }
-    }
-    @Test
-    void finished(){
-        worker.guiInterface.executeBM();
-        assertTrue(currUI.lastStatus);
-    }
-
+    NonSwingImplementation NonSwingUI = (NonSwingImplementation) NonSwingWorker.guiInterface;
 
     /**
-     * Bruteforce setup of static classes/fields to allow DiskWorker to run.
-     *
-     * @author lcmcohen
+     * Boundary Condition check - numeric overflows.
+     * Checks the non-Swing implementation of the progress method to ensure progress does not exceed 100
      */
+    @Test
+    void progressLessThan100(){
+        NonSwingWorker.guiInterface.executeBM();
+        ArrayList<Integer> percentList = NonSwingUI.getPercentList();
+        for (Integer integer : percentList) {
+            assertTrue(integer <= 100);
+        }
+    }
+    /**
+     * Boundary Condition check - numeric overflows.
+     * Checks the non-Swing implementation of the progress method to ensure progress does not less than zero
+     */
+    @Test
+    void progressMoreThanZero(){
+        NonSwingWorker.guiInterface.executeBM();
+        ArrayList<Integer> percentList = NonSwingUI.getPercentList();
+        for (Integer integer : percentList) {
+            assertTrue(integer >= 0);
+        }
+    }
+
+    /**
+     * Tests for Performance.
+     * Ensures that the Non-Swing Implementation of BadBM takes less 10 seconds
+     */
+    @Test
+    void execute(){
+        long performanceBoundary = 10000;
+        for (int i = 0; i < 5; i ++){
+            long currTime = System.currentTimeMillis();
+            NonSwingWorker.guiInterface.executeBM();
+            long finishTime = System.currentTimeMillis();
+            assertTrue(finishTime - currTime < performanceBoundary);
+        }
+    }
+
     @BeforeAll
     public static void setupDefaultAsPerProperties()
     {

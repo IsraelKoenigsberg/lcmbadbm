@@ -32,6 +32,8 @@ dependencies {
 // DBMS
     implementation group: 'org.apache.derby', name: 'derby', version: '10.15.2.0'
     implementation group: 'org.apache.derby', name: 'derbyshared', version: '10.15.2.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 }
 
 testing {
@@ -42,6 +44,9 @@ testing {
             useJUnitJupiter('5.9.1')
         }
     }
+}
+test {
+    useJUnitPlatform()
 }
 // Make sure gradle (also) places resource files where IntelliJ wants them
 sourceSets.main.output.resourcesDir = sourceSets.main.output.classesDirs.asPath

@@ -1,8 +1,13 @@
 package edu.touro.mco152.bm;
 
+import edu.touro.mco152.bm.ui.Gui;
+
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
+import java.util.logging.Logger;
+
+import static edu.touro.mco152.bm.App.dataDir;
 
 public class NonSwingImplementation implements GUIInterface {
     Callable<Boolean> callable;
@@ -48,7 +53,18 @@ public class NonSwingImplementation implements GUIInterface {
 
     @Override
     public void BMDone() {
+        // Obtain final status, might from doInBackground ret value, or SwingWorker error
+        try {
+            lastStatus = getStatus();   // record for future access
+        } catch (Exception e) {
+            Logger.getLogger(App.class.getName()).warning("Problem obtaining final status: " + e.getMessage());
+        }
 
+        if (App.autoRemoveData) {
+            Util.deleteDirectory(dataDir);
+        }
+        App.state = App.State.IDLE_STATE;
+        Gui.mainFrame.adjustSensitivity();
     }
 
     @Override
@@ -75,6 +91,6 @@ public class NonSwingImplementation implements GUIInterface {
     @Override
     public void setWork(Callable<Boolean> bool) {
         callable = bool;
-        System.out.println("bool1 "+bool);
+
     }
 }
