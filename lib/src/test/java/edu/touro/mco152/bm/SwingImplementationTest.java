@@ -50,16 +50,14 @@ public class SwingImplementationTest {
     }
 
     /**
-     * Forces an error to happen.
-     * The progress method cannot accept negative numbers
-     * This test will FAIL and throw illegal argument exception
+     * Checks that setProgress works with an int only between 0  through 100 including 0 and 100
      */
-    @Test
-    void setProgress(){
-        int badNum = -1;
+    @ParameterizedTest
+    @ValueSource(ints  = {0,50,100})
+    void setProgress(int ints){
         assertDoesNotThrow(() -> {
             swingWorker.guiInterface.executeBM();
-            swingWorker.guiInterface.setBMProgress(badNum);
+            swingWorker.guiInterface.setBMProgress(ints);
         }, "Illegal Argument Exception" );
     }
 
