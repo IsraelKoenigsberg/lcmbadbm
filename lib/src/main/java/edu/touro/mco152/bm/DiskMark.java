@@ -17,7 +17,7 @@ public class DiskMark {
     private double cumMax = 0;
     private double cumAvg = 0;
 
-    DiskMark(MarkType type) {
+    public DiskMark(MarkType type) {
         this.type = type;
     }
 
@@ -31,7 +31,7 @@ public class DiskMark {
         return "Mark(" + type + "): " + getMarkNum() + " bwMbSec: " + getBwMbSecAsString() + " avg: " + getAvgAsString();
     }
 
-    String getBwMbSecAsString() {
+    public String getBwMbSecAsString() {
         return df.format(getBwMbSec());
     }
 
