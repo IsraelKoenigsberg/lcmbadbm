@@ -50,7 +50,7 @@ public class SwingImplementationTest {
     }
 
     /**
-     * Checks that setProgress works with an int only between 0  through 100 including 0 and 100
+     * Checks that setProgress works with an int only between 0 through 100 including 0 and 100
      */
     @ParameterizedTest
     @ValueSource(ints  = {0,50,100})
