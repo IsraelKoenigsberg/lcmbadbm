@@ -18,8 +18,9 @@ import static edu.touro.mco152.bm.App.*;
 import static edu.touro.mco152.bm.App.updateMetrics;
 import static edu.touro.mco152.bm.DiskMark.MarkType.READ;
 
-public class Read {
-    public boolean readOperation(GUIInterface guiInterface){
+public class Read implements CommandInterface {
+    @Override
+    public boolean execute(GUIInterface guiInterface){
         int wUnitsComplete = 0,
                 rUnitsComplete = 0,
                 unitsComplete;

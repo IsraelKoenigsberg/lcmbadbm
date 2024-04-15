@@ -15,12 +15,14 @@ import java.util.logging.Logger;
 import static edu.touro.mco152.bm.App.*;
 import static edu.touro.mco152.bm.DiskMark.MarkType.WRITE;
 
-public class Write {
+public class Write implements CommandInterface {
+
 
     /*
        The GUI allows a Write, Read, or both types of BMs to be started. They are done serially.
       */
-    public void writeOperation(GUIInterface guiInterface){
+    @Override
+    public boolean execute(GUIInterface guiInterface){
         int wUnitsComplete = 0,
                 rUnitsComplete = 0,
                 unitsComplete;
@@ -143,5 +145,6 @@ public class Write {
 
             Gui.runPanel.addRun(run);
         }
+        return true;
     }
 }

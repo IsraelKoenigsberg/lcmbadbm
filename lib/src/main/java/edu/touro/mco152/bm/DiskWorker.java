@@ -26,6 +26,7 @@ public class DiskWorker {
     GUIInterface guiInterface;
     Write write = new Write();
     Read read = new Read();
+    Invoker invoker = new Invoker();
     DiskWorker(GUIInterface guiInterface) {
         this.guiInterface = guiInterface;
 
@@ -39,11 +40,9 @@ public class DiskWorker {
      /*
        init local vars that keep track of benchmarks, and a large read/write buffer
       */
-             int wUnitsComplete = 0, rUnitsComplete = 0, unitsComplete;
-             int wUnitsTotal = writeTest ? numOfBlocks * numOfMarks : 0;
-             int rUnitsTotal = readTest ? numOfBlocks * numOfMarks : 0;
-             int unitsTotal = wUnitsTotal + rUnitsTotal;
-             float percentComplete;
+
+
+
 
              int blockSize = blockSizeKb * KILOBYTE;
              byte[] blockArr = new byte[blockSize];
@@ -61,9 +60,8 @@ public class DiskWorker {
                  resetTestData();
                  Gui.resetTestData();
              }
-
-             int startFileNum = nextMarkNumber;
-            write.writeOperation(guiInterface);
+//             invoker.invoke(writeTest, );
+              write.execute(guiInterface);
 
 
      /*
@@ -85,8 +83,8 @@ public class DiskWorker {
              }
 
              // Same as above, just for Read operations instead of Writes.
-             boolean correctRead = read.readOperation(guiInterface);
-             nextMarkNumber += numOfMarks;
+             boolean correctRead = read.execute(guiInterface);
+                         nextMarkNumber += numOfMarks;
              return correctRead;
 
 
