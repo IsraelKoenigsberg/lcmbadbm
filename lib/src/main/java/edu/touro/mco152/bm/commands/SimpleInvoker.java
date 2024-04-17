@@ -1,4 +1,6 @@
-package edu.touro.mco152.bm;
+package edu.touro.mco152.bm.commands;
+
+import edu.touro.mco152.bm.GUIInterface;
 
 /**
  * Simple Invoker that executes commands. May accept any implementation of CommandInterface,
