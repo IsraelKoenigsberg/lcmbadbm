@@ -1,5 +1,10 @@
 package edu.touro.mco152.bm;
 
+/**
+ * Simple Invoker that executes commands. May accept any implementation of CommandInterface,
+ * regardless of subclass type. Also accepts GUIInterface implementation to execute to allow multiple types
+ * of interfaces to be executed.
+ */
 public class SimpleInvoker {
 
     public boolean invoke(CommandInterface command, GUIInterface guiInterface) {

@@ -10,16 +10,21 @@ import java.io.File;
 import java.util.Properties;
 import static org.junit.jupiter.api.Assertions.*;
 
-
+/**
+ * Tests the command pattern logic. Uses hardcoded benchmark variables to test. Instantiates different
+ * CommandInterface subtypes to run tests.
+ */
 public class CommandTest {
     SimpleInvoker invoker = new SimpleInvoker();
     CommandInterface write = new WriteCommand(25, 128, 2048, DiskRun.BlockSequence.SEQUENTIAL);
     CommandInterface read = new ReadCommand(25, 128, 2048, DiskRun.BlockSequence.SEQUENTIAL);
     GUIInterface guiInterface = new NonSwingImplementation();
+    // Tests the WriteCommand logic using SimpleInvoker
     @Test
     void writeBenchmarkTest(){
        assertTrue(invoker.invoke(write, guiInterface));
     }
+    // Tests the ReadCommand logic using SimpleInvoker
     @Test
     void readBenchmarkTest(){
         assertTrue(invoker.invoke(read, guiInterface));

@@ -26,7 +26,9 @@ public class DiskWorker {
     GUIInterface guiInterface;
     CommandInterface write = new WriteCommand(numOfMarks, numOfBlocks, blockSizeKb, blockSequence);
     CommandInterface read = new ReadCommand(numOfMarks, numOfBlocks, blockSizeKb, blockSequence);
-       SimpleInvoker invoker = new SimpleInvoker();
+    SimpleInvoker invoker = new SimpleInvoker();
+    boolean benchmarkOperationsSuccessful = false;
+
     DiskWorker(GUIInterface guiInterface) {
         this.guiInterface = guiInterface;
         guiInterface.setWork(() -> {
@@ -49,23 +51,28 @@ public class DiskWorker {
                 resetTestData();
                 Gui.resetTestData();
             }
-
-            if (writeTest) invoker.invoke(write, guiInterface);
+        /*
+       The GUI allows a Write, Read, or both types of BMs to be started. They are done serially.
+       Overrides the execute method from CommandInterface, in line with the Command Pattern.
+        */
+            // Invoke a WriteCommand
+            if (writeTest) benchmarkOperationsSuccessful = invoker.invoke(write, guiInterface);
+            // try renaming all files to clear catch
             tryRenamingAllFilesToClearCatch();
-            // Same as above, just for Read operations instead of Writes.
-
-            if (readTest) invoker.invoke(read, guiInterface);
+            // Invoke a ReadCommand
+            if (readTest) benchmarkOperationsSuccessful = invoker.invoke(read, guiInterface);
             nextMarkNumber += numOfMarks;
-            return true;
+            return benchmarkOperationsSuccessful;
         });
     }
-    public void tryRenamingAllFilesToClearCatch(){
+
+    public void tryRenamingAllFilesToClearCatch() {
          /*
        Most benchmarking systems will try to do some cleanup in between 2 benchmark operations to
        make it more 'fair'. For example a networking benchmark might close and re-open sockets,
        a memory benchmark might clear or invalidate the Op Systems TLB or other caches, etc.
       */
-        // try renaming all files to clear catch
+
         if (readTest && writeTest && !guiInterface.isBMCancelled()) {
             JOptionPane.showMessageDialog(Gui.mainFrame,
                     """

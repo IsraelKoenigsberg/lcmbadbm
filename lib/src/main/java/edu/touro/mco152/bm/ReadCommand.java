@@ -4,6 +4,7 @@ import edu.touro.mco152.bm.persist.DiskRun;
 import edu.touro.mco152.bm.persist.EM;
 import edu.touro.mco152.bm.ui.Gui;
 import jakarta.persistence.EntityManager;
+
 import javax.swing.*;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -17,12 +18,25 @@ import static edu.touro.mco152.bm.App.*;
 import static edu.touro.mco152.bm.App.updateMetrics;
 import static edu.touro.mco152.bm.DiskMark.MarkType.READ;
 
+/**
+ * Reads from the benchmark. A command class that utilizes SimpleInvoker and implements CommandInterface
+ * to execute its writes.
+ */
 public class ReadCommand implements CommandInterface {
     private final int marksNum;
     private final int blocksNum;
     private final int blockSizeInKb;
     private final DiskRun.BlockSequence blockSequence;
 
+    /**
+     * Constructor for ReadCommand.
+     * Accepts benchmark variables to use for benchmark writes.
+     *
+     * @param marksNum      number of marks in a read
+     * @param blocksNum     number of blocks in a read
+     * @param blockSizeInKb size of a block in KB
+     * @param blockSequence sequence of the blocks
+     */
     ReadCommand(int marksNum, int blocksNum, int blockSizeInKb,
                 DiskRun.BlockSequence blockSequence) {
         this.marksNum = marksNum;
@@ -30,6 +44,8 @@ public class ReadCommand implements CommandInterface {
         this.blockSizeInKb = blockSizeInKb;
         this.blockSequence = blockSequence;
     }
+
+    // Overrides the execute method from CommandInterface, in line with the Command Pattern.
     @Override
     public boolean execute(GUIInterface guiInterface) {
         int wUnitsComplete = 0,
@@ -58,12 +74,16 @@ public class ReadCommand implements CommandInterface {
         run.setBlockSize(blockSizeInKb);
         run.setTxSize(targetTxSizeKb());
         run.setDiskInfo(Util.getDiskInfo(dataDir));
-
+        // Tell logger and GUI to display what we know so far about the Run
         msg("disk info: (" + run.getDiskInfo() + ")");
 
         Gui.chartPanel.getChart().getTitle().setVisible(true);
         Gui.chartPanel.getChart().getTitle().setText(run.getDiskInfo());
-
+        /*
+           Begin an outer loop for specified duration (number of 'marks') of benchmark,
+           that keeps writing data (in its own loop - for specified # of blocks). Each 'Mark' is timed
+           and is reported to the GUI for display as each Mark completes.
+          */
         for (int m = startFileNum; m < startFileNum + marksNum && !guiInterface.isBMCancelled(); m++) {
 
             if (multiFile) {
