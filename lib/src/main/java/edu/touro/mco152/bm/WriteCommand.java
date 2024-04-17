@@ -15,14 +15,14 @@ import java.util.logging.Logger;
 import static edu.touro.mco152.bm.App.*;
 import static edu.touro.mco152.bm.DiskMark.MarkType.WRITE;
 
-public class Write implements CommandInterface {
+public class WriteCommand implements CommandInterface {
     private final int marksNum;
     private final int blocksNum;
     private final int blockSizeInKb;
     private final DiskRun.BlockSequence blockSequence;
 
-    Write(int marksNum, int blocksNum, int blockSizeInKb,
-          DiskRun.BlockSequence blockSequence) {
+    WriteCommand(int marksNum, int blocksNum, int blockSizeInKb,
+                 DiskRun.BlockSequence blockSequence) {
         this.marksNum = marksNum;
         this.blocksNum = blocksNum;
         this.blockSizeInKb = blockSizeInKb;

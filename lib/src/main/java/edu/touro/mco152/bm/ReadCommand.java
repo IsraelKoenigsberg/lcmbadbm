@@ -17,14 +17,14 @@ import static edu.touro.mco152.bm.App.*;
 import static edu.touro.mco152.bm.App.updateMetrics;
 import static edu.touro.mco152.bm.DiskMark.MarkType.READ;
 
-public class Read implements CommandInterface {
+public class ReadCommand implements CommandInterface {
     private final int marksNum;
     private final int blocksNum;
     private final int blockSizeInKb;
     private final DiskRun.BlockSequence blockSequence;
 
-    Read(int marksNum, int blocksNum, int blockSizeInKb,
-          DiskRun.BlockSequence blockSequence) {
+    ReadCommand(int marksNum, int blocksNum, int blockSizeInKb,
+                DiskRun.BlockSequence blockSequence) {
         this.marksNum = marksNum;
         this.blocksNum = blocksNum;
         this.blockSizeInKb = blockSizeInKb;

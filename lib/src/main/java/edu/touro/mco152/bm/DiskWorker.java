@@ -3,8 +3,6 @@ package edu.touro.mco152.bm;
 import edu.touro.mco152.bm.ui.Gui;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,9 +24,9 @@ import static edu.touro.mco152.bm.App.*;
 
 public class DiskWorker {
     GUIInterface guiInterface;
-    CommandInterface write = new Write(numOfMarks, numOfBlocks, blockSizeKb, blockSequence);
-    CommandInterface read = new Read(numOfMarks, numOfBlocks, blockSizeKb, blockSequence);
-       Invoker invoker = new Invoker();
+    CommandInterface write = new WriteCommand(numOfMarks, numOfBlocks, blockSizeKb, blockSequence);
+    CommandInterface read = new ReadCommand(numOfMarks, numOfBlocks, blockSizeKb, blockSequence);
+       SimpleInvoker invoker = new SimpleInvoker();
     DiskWorker(GUIInterface guiInterface) {
         this.guiInterface = guiInterface;
         guiInterface.setWork(() -> {
