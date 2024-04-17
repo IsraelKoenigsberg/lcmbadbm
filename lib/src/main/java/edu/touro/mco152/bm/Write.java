@@ -16,27 +16,38 @@ import static edu.touro.mco152.bm.App.*;
 import static edu.touro.mco152.bm.DiskMark.MarkType.WRITE;
 
 public class Write implements CommandInterface {
+    private final int marksNum;
+    private final int blocksNum;
+    private final int blockSizeInKb;
+    private final DiskRun.BlockSequence blockSequence;
 
+    Write(int marksNum, int blocksNum, int blockSizeInKb,
+          DiskRun.BlockSequence blockSequence) {
+        this.marksNum = marksNum;
+        this.blocksNum = blocksNum;
+        this.blockSizeInKb = blockSizeInKb;
+        this.blockSequence = blockSequence;
+    }
 
     /*
        The GUI allows a Write, Read, or both types of BMs to be started. They are done serially.
       */
     @Override
-    public boolean execute(GUIInterface guiInterface){
+    public boolean execute(GUIInterface guiInterface) {
         int wUnitsComplete = 0,
                 rUnitsComplete = 0,
                 unitsComplete;
 
-        int wUnitsTotal = App.writeTest ? numOfBlocks * numOfMarks : 0;
-        int rUnitsTotal = App.readTest ? numOfBlocks * numOfMarks : 0;
+        int wUnitsTotal = App.writeTest ? blocksNum * marksNum : 0;
+        int rUnitsTotal = App.readTest ? blocksNum * marksNum : 0;
         int unitsTotal = wUnitsTotal + rUnitsTotal;
         float percentComplete;
 
-        int blockSize = blockSizeKb*KILOBYTE;
-        byte [] blockArr = new byte [blockSize];
-        for (int b=0; b<blockArr.length; b++) {
-            if (b%2==0) {
-                blockArr[b]=(byte)0xFF;
+        int blockSize = blockSizeInKb * KILOBYTE;
+        byte[] blockArr = new byte[blockSize];
+        for (int b = 0; b < blockArr.length; b++) {
+            if (b % 2 == 0) {
+                blockArr[b] = (byte) 0xFF;
             }
         }
 
@@ -45,11 +56,11 @@ public class Write implements CommandInterface {
          /*
        The GUI allows a Write, Read, or both types of BMs to be started. They are done serially.
       */
-        if (writeTest) {
+
             DiskRun run = new DiskRun(DiskRun.IOMode.WRITE, blockSequence);
-            run.setNumMarks(numOfMarks);
-            run.setNumBlocks(numOfBlocks);
-            run.setBlockSize(blockSizeKb);
+            run.setNumMarks(marksNum);
+            run.setNumBlocks(blocksNum);
+            run.setBlockSize(blockSizeInKb);
             run.setTxSize(targetTxSizeKb());
             run.setDiskInfo(Util.getDiskInfo(dataDir));
 
@@ -69,7 +80,7 @@ public class Write implements CommandInterface {
            that keeps writing data (in its own loop - for specified # of blocks). Each 'Mark' is timed
            and is reported to the GUI for display as each Mark completes.
           */
-            for (int m = startFileNum; m < startFileNum + numOfMarks && !guiInterface.isBMCancelled(); m++) {
+            for (int m = startFileNum; m < startFileNum + marksNum && !guiInterface.isBMCancelled(); m++) {
 
                 if (multiFile) {
                     testFile = new File(dataDir.getAbsolutePath()
@@ -87,9 +98,9 @@ public class Write implements CommandInterface {
 
                 try {
                     try (RandomAccessFile rAccFile = new RandomAccessFile(testFile, mode)) {
-                        for (int b = 0; b < numOfBlocks; b++) {
+                        for (int b = 0; b < blocksNum; b++) {
                             if (blockSequence == DiskRun.BlockSequence.RANDOM) {
-                                int rLoc = Util.randInt(0, numOfBlocks - 1);
+                                int rLoc = Util.randInt(0, blocksNum - 1);
                                 rAccFile.seek((long) rLoc * blockSize);
                             } else {
                                 rAccFile.seek((long) b * blockSize);
@@ -144,7 +155,7 @@ public class Write implements CommandInterface {
             em.getTransaction().commit();
 
             Gui.runPanel.addRun(run);
-        }
+
         return true;
     }
 }
