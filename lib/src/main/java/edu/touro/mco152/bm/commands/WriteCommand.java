@@ -163,15 +163,9 @@ public class WriteCommand implements CommandInterface, ObservableInterface {
             run.setEndTime(new Date());
         } // END outer loop for specified duration (number of 'marks') for WRITE benchmark
 
-         /*
-           Persist info about the Write BM Run (e.g. into Derby Database) and add it to a GUI panel
-          */
-        EntityManager em = EM.getEntityManager();
-        em.getTransaction().begin();
-        em.persist(run);
-        em.getTransaction().commit();
+        notifyObservers();
 
-        Gui.runPanel.addRun(run);
+
 
         return true;
     }

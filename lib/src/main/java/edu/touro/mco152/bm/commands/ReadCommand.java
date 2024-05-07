@@ -149,15 +149,9 @@ public class ReadCommand implements CommandInterface, ObservableInterface {
             run.setEndTime(new Date());
         }
 
-         /*
-           Persist info about the Read BM Run (e.g. into Derby Database) and add it to a GUI panel
-          */
-        EntityManager em = EM.getEntityManager();
-        em.getTransaction().begin();
-        em.persist(run);
-        em.getTransaction().commit();
+       notifyObservers();
 
-        Gui.runPanel.addRun(run);
+
 
         return true;
     }
