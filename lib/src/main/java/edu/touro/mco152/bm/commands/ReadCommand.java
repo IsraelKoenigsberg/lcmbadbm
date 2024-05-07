@@ -1,5 +1,9 @@
-package edu.touro.mco152.bm;
+package edu.touro.mco152.bm.commands;
 
+import edu.touro.mco152.bm.App;
+import edu.touro.mco152.bm.DiskMark;
+import edu.touro.mco152.bm.GUIInterface;
+import edu.touro.mco152.bm.Util;
 import edu.touro.mco152.bm.persist.DiskRun;
 import edu.touro.mco152.bm.persist.EM;
 import edu.touro.mco152.bm.ui.Gui;
@@ -37,8 +41,8 @@ public class ReadCommand implements CommandInterface {
      * @param blockSizeInKb size of a block in KB
      * @param blockSequence sequence of the blocks
      */
-    ReadCommand(int marksNum, int blocksNum, int blockSizeInKb,
-                DiskRun.BlockSequence blockSequence) {
+    public ReadCommand(int marksNum, int blocksNum, int blockSizeInKb,
+                       DiskRun.BlockSequence blockSequence) {
         this.marksNum = marksNum;
         this.blocksNum = blocksNum;
         this.blockSizeInKb = blockSizeInKb;

@@ -28,7 +28,7 @@ import static edu.touro.mco152.bm.App.*;
 
 public class DiskWorker {
     GUIInterface guiInterface;
-    CommandInterface write = new WriteCommand(numOfMarks, numOfBlocks, blockSizeKb, blockSequence);
+    WriteCommand write = new WriteCommand(numOfMarks, numOfBlocks, blockSizeKb, blockSequence);
     CommandInterface read = new ReadCommand(numOfMarks, numOfBlocks, blockSizeKb, blockSequence);
     SimpleInvoker invoker = new SimpleInvoker();
     boolean benchmarkOperationsSuccessful = false;
