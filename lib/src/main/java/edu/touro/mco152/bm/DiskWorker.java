@@ -1,11 +1,9 @@
 package edu.touro.mco152.bm;
 
-import edu.touro.mco152.bm.commands.CommandInterface;
 import edu.touro.mco152.bm.commands.ReadCommand;
 import edu.touro.mco152.bm.commands.SimpleInvoker;
 import edu.touro.mco152.bm.commands.WriteCommand;
 import edu.touro.mco152.bm.observerPattern.ObservableInterface;
-import edu.touro.mco152.bm.observerPattern.ObserverInterface;
 import edu.touro.mco152.bm.persist.DatabasePersistenceObserver;
 import edu.touro.mco152.bm.ui.Gui;
 
@@ -78,10 +76,12 @@ public class DiskWorker {
             return benchmarkOperationsSuccessful;
         });
     }
-     private void observerRegisterController(ObservableInterface observable){
+
+    private void observerRegisterController(ObservableInterface observable) {
         observable.registerObserver(new DatabasePersistenceObserver());
         observable.registerObserver(new Gui());
-     }
+    }
+
     public void tryRenamingAllFilesToClearCatch() {
          /*
        Most benchmarking systems will try to do some cleanup in between 2 benchmark operations to

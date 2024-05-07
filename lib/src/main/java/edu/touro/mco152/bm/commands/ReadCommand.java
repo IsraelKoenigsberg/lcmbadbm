@@ -7,9 +7,7 @@ import edu.touro.mco152.bm.Util;
 import edu.touro.mco152.bm.observerPattern.ObservableInterface;
 import edu.touro.mco152.bm.observerPattern.ObserverInterface;
 import edu.touro.mco152.bm.persist.DiskRun;
-import edu.touro.mco152.bm.persist.EM;
 import edu.touro.mco152.bm.ui.Gui;
-import jakarta.persistence.EntityManager;
 
 import javax.swing.*;
 import java.io.File;
@@ -26,8 +24,10 @@ import static edu.touro.mco152.bm.App.updateMetrics;
 import static edu.touro.mco152.bm.DiskMark.MarkType.READ;
 
 /**
- * Reads from the benchmark. A command class that utilizes SimpleInvoker and implements CommandInterface
+ * Reads from the benchmark.
+ * A command class that utilizes SimpleInvoker and implements CommandInterface
  * to execute its writes.
+ * An Observable subject class that notifies observers when action has been taken.
  */
 public class ReadCommand implements CommandInterface, ObservableInterface {
     ArrayList<ObserverInterface> observerList = new ArrayList<>();
@@ -148,11 +148,8 @@ public class ReadCommand implements CommandInterface, ObservableInterface {
             run.setRunAvg(rMark.getCumAvg());
             run.setEndTime(new Date());
         }
-
-       notifyObservers();
-
-
-
+        // Notify any observers of this subject class to update their data
+        notifyObservers();
         return true;
     }
 

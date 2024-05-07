@@ -7,9 +7,7 @@ import edu.touro.mco152.bm.Util;
 import edu.touro.mco152.bm.observerPattern.ObservableInterface;
 import edu.touro.mco152.bm.observerPattern.ObserverInterface;
 import edu.touro.mco152.bm.persist.DiskRun;
-import edu.touro.mco152.bm.persist.EM;
 import edu.touro.mco152.bm.ui.Gui;
-import jakarta.persistence.EntityManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,8 +21,10 @@ import static edu.touro.mco152.bm.App.*;
 import static edu.touro.mco152.bm.DiskMark.MarkType.WRITE;
 
 /**
- * Writes to the benchmark. A command class that utilizes SimpleInvoker and implements CommandInterface
+ * Writes to the benchmark.
+ * A command class that utilizes SimpleInvoker and implements CommandInterface
  * to execute its writes.
+ * An Observable subject class that notifies observers when action has been taken.
  */
 public class WriteCommand implements CommandInterface, ObservableInterface {
     private ArrayList<ObserverInterface> observerList = new ArrayList<>();
@@ -162,11 +162,8 @@ public class WriteCommand implements CommandInterface, ObservableInterface {
             run.setRunAvg(wMark.getCumAvg());
             run.setEndTime(new Date());
         } // END outer loop for specified duration (number of 'marks') for WRITE benchmark
-
+        // Notify any observers of this subject class to update their data
         notifyObservers();
-
-
-
         return true;
     }
 

@@ -21,6 +21,7 @@ import java.text.NumberFormat;
 /**
  * Creates and populates a graph with data from the current run, and
  * stores gui references for easy access.
+ * Observer class type; updates GUI panel when notified by subject
  */
 public final class Gui implements ObserverInterface {
 
