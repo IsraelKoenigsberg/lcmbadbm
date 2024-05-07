@@ -4,6 +4,8 @@ import edu.touro.mco152.bm.App;
 import edu.touro.mco152.bm.DiskMark;
 import edu.touro.mco152.bm.GUIInterface;
 import edu.touro.mco152.bm.Util;
+import edu.touro.mco152.bm.observerPattern.ObservableInterface;
+import edu.touro.mco152.bm.observerPattern.ObserverInterface;
 import edu.touro.mco152.bm.persist.DiskRun;
 import edu.touro.mco152.bm.persist.EM;
 import edu.touro.mco152.bm.ui.Gui;
@@ -14,6 +16,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,11 +29,13 @@ import static edu.touro.mco152.bm.DiskMark.MarkType.READ;
  * Reads from the benchmark. A command class that utilizes SimpleInvoker and implements CommandInterface
  * to execute its writes.
  */
-public class ReadCommand implements CommandInterface {
+public class ReadCommand implements CommandInterface, ObservableInterface {
+    ArrayList<ObserverInterface> observerList = new ArrayList<>();
     private final int marksNum;
     private final int blocksNum;
     private final int blockSizeInKb;
     private final DiskRun.BlockSequence blockSequence;
+    private DiskRun run;
 
     /**
      * Constructor for ReadCommand.
@@ -47,6 +52,7 @@ public class ReadCommand implements CommandInterface {
         this.blocksNum = blocksNum;
         this.blockSizeInKb = blockSizeInKb;
         this.blockSequence = blockSequence;
+
     }
 
     // Overrides the execute method from CommandInterface, in line with the Command Pattern.
@@ -72,7 +78,7 @@ public class ReadCommand implements CommandInterface {
         DiskMark rMark;
         int startFileNum = App.nextMarkNumber;
 
-        DiskRun run = new DiskRun(DiskRun.IOMode.READ, blockSequence);
+        run = new DiskRun(DiskRun.IOMode.READ, blockSequence);
         run.setNumMarks(marksNum);
         run.setNumBlocks(blocksNum);
         run.setBlockSize(blockSizeInKb);
@@ -154,5 +160,22 @@ public class ReadCommand implements CommandInterface {
         Gui.runPanel.addRun(run);
 
         return true;
+    }
+
+    @Override
+    public void registerObserver(ObserverInterface observer) {
+        observerList.add(observer);
+    }
+
+    @Override
+    public void unregisterObserver(ObserverInterface observer) {
+        observerList.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for (ObserverInterface observer : observerList) {
+            observer.update(run);
+        }
     }
 }
