@@ -152,17 +152,25 @@ public class ReadCommand implements CommandInterface, ObservableInterface {
         notifyObservers();
         return true;
     }
-
+    /**
+     * Registers an observer of the ReadCommand subject class to be notified
+     * @param observer
+     */
     @Override
     public void registerObserver(ObserverInterface observer) {
         observerList.add(observer);
     }
-
+    /**
+     * Unregisters an observer of the ReadCommand subject class to no longer be notified
+     * @param observer
+     */
     @Override
     public void unregisterObserver(ObserverInterface observer) {
         observerList.remove(observer);
     }
-
+    /**
+     * Notifies any registered observers
+     */
     @Override
     public void notifyObservers() {
         for (ObserverInterface observer : observerList) {

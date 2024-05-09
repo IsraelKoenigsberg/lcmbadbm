@@ -167,16 +167,25 @@ public class WriteCommand implements CommandInterface, ObservableInterface {
         return true;
     }
 
+    /**
+     * Registers an observer of the WriteCommand subject class to be notified
+     * @param observer
+     */
     @Override
     public void registerObserver(ObserverInterface observer) {
         observerList.add(observer);
     }
-
+    /**
+     * Unregisters an observer of the WriteCommand subject class to no longer be notified
+     * @param observer
+     */
     @Override
     public void unregisterObserver(ObserverInterface observer) {
         observerList.remove(observer);
     }
-
+    /**
+     * Notifies any registered observers
+     */
     @Override
     public void notifyObservers() {
         for (ObserverInterface observer : observerList) {
