@@ -4,6 +4,7 @@ import edu.touro.mco152.bm.commands.ReadCommand;
 import edu.touro.mco152.bm.commands.SimpleInvoker;
 import edu.touro.mco152.bm.commands.WriteCommand;
 import edu.touro.mco152.bm.observerPattern.ObservableInterface;
+import edu.touro.mco152.bm.slack.SlackObserver;
 import edu.touro.mco152.bm.persist.DatabasePersistenceObserver;
 import edu.touro.mco152.bm.ui.Gui;
 
@@ -62,15 +63,17 @@ public class DiskWorker {
         */
             // Invoke a WriteCommand
             if (writeTest) {
-                benchmarkOperationsSuccessful = invoker.invoke(write, guiInterface);
                 observerRegisterController(write);
+                benchmarkOperationsSuccessful = invoker.invoke(write, guiInterface);
+
             }
             // try renaming all files to clear catch
             tryRenamingAllFilesToClearCatch();
             // Invoke a ReadCommand
             if (readTest) {
-                benchmarkOperationsSuccessful = invoker.invoke(read, guiInterface);
                 observerRegisterController(read);
+                benchmarkOperationsSuccessful = invoker.invoke(read, guiInterface);
+
             }
             nextMarkNumber += numOfMarks;
             return benchmarkOperationsSuccessful;
@@ -80,6 +83,7 @@ public class DiskWorker {
     private void observerRegisterController(ObservableInterface observable) {
         observable.registerObserver(new DatabasePersistenceObserver());
         observable.registerObserver(new Gui());
+        observable.registerObserver(new SlackObserver());
     }
 
     public void tryRenamingAllFilesToClearCatch() {

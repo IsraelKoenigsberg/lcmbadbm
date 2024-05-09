@@ -1,7 +1,7 @@
 package edu.touro.mco152.bm;
 
+import edu.touro.mco152.bm.commands.ReadCommand;
 import edu.touro.mco152.bm.commands.SimpleInvoker;
-import edu.touro.mco152.bm.commands.WriteCommand;
 import edu.touro.mco152.bm.observerPattern.TestObserver;
 import edu.touro.mco152.bm.persist.DiskRun;
 import edu.touro.mco152.bm.ui.Gui;
@@ -15,19 +15,22 @@ import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Observer Pattern Test class.
+ * Tests that the overridden method in the observer subclasses are called correctly.
+ */
 public class ObserverTest {
     GUIInterface nonSwing = new NonSwingImplementation();
-    WriteCommand writeSubject = new WriteCommand(25, 128, 2048, DiskRun.BlockSequence.SEQUENTIAL);
+    ReadCommand readSubject = new ReadCommand(25, 128, 2048, DiskRun.BlockSequence.SEQUENTIAL);
     SimpleInvoker invoker = new SimpleInvoker();
     static TestObserver testObserver = new TestObserver();
 
     @Test
     void observerRegisteredTest() {
         // Register the test observer
-        writeSubject.registerObserver(testObserver);
+        readSubject.registerObserver(testObserver);
         // Call the executor so the WriteCommand will run and notify the observers
-        invoker.invoke(writeSubject, nonSwing);
-
+        invoker.invoke(readSubject, nonSwing);
     }
 
     @AfterAll
