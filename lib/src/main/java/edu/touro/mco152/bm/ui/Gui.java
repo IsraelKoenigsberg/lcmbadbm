@@ -2,6 +2,8 @@ package edu.touro.mco152.bm.ui;
 
 import edu.touro.mco152.bm.App;
 import edu.touro.mco152.bm.DiskMark;
+import edu.touro.mco152.bm.observerPattern.ObserverInterface;
+import edu.touro.mco152.bm.persist.DiskRun;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -19,8 +21,9 @@ import java.text.NumberFormat;
 /**
  * Creates and populates a graph with data from the current run, and
  * stores gui references for easy access.
+ * Observer class type; updates GUI panel when notified by subject
  */
-public final class Gui {
+public final class Gui implements ObserverInterface {
 
     public static ChartPanel chartPanel = null;
     public static MainFrame mainFrame = null;
@@ -139,5 +142,11 @@ public final class Gui {
         chart.getXYPlot().getRenderer().setSeriesVisibleInLegend(5, App.readTest);
         chart.getXYPlot().getRenderer().setSeriesVisibleInLegend(6, App.readTest && App.showMaxMin);
         chart.getXYPlot().getRenderer().setSeriesVisibleInLegend(7, App.readTest && App.showMaxMin);
+    }
+
+    @Override
+    public void update(DiskRun run) {
+        // Add persistence info to GUI panel
+        Gui.runPanel.addRun(run);
     }
 }

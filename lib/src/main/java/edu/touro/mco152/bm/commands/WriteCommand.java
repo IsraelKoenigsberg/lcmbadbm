@@ -4,14 +4,15 @@ import edu.touro.mco152.bm.App;
 import edu.touro.mco152.bm.DiskMark;
 import edu.touro.mco152.bm.GUIInterface;
 import edu.touro.mco152.bm.Util;
+import edu.touro.mco152.bm.observerPattern.ObservableInterface;
+import edu.touro.mco152.bm.observerPattern.ObserverInterface;
 import edu.touro.mco152.bm.persist.DiskRun;
-import edu.touro.mco152.bm.persist.EM;
 import edu.touro.mco152.bm.ui.Gui;
-import jakarta.persistence.EntityManager;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,14 +21,18 @@ import static edu.touro.mco152.bm.App.*;
 import static edu.touro.mco152.bm.DiskMark.MarkType.WRITE;
 
 /**
- * Writes to the benchmark. A command class that utilizes SimpleInvoker and implements CommandInterface
+ * Writes to the benchmark.
+ * A command class that utilizes SimpleInvoker and implements CommandInterface
  * to execute its writes.
+ * An Observable subject class that notifies observers when action has been taken.
  */
-public class WriteCommand implements CommandInterface {
+public class WriteCommand implements CommandInterface, ObservableInterface {
+    private ArrayList<ObserverInterface> observerList = new ArrayList<>();
     private final int marksNum;
     private final int blocksNum;
     private final int blockSizeInKb;
     private final DiskRun.BlockSequence blockSequence;
+    private DiskRun run;
 
     /**
      * Constructor for WriteCommand.
@@ -69,7 +74,7 @@ public class WriteCommand implements CommandInterface {
         DiskMark wMark;
         int startFileNum = App.nextMarkNumber;
 
-        DiskRun run = new DiskRun(DiskRun.IOMode.WRITE, blockSequence);
+        run = new DiskRun(DiskRun.IOMode.WRITE, blockSequence);
         run.setNumMarks(marksNum);
         run.setNumBlocks(blocksNum);
         run.setBlockSize(blockSizeInKb);
@@ -157,17 +162,34 @@ public class WriteCommand implements CommandInterface {
             run.setRunAvg(wMark.getCumAvg());
             run.setEndTime(new Date());
         } // END outer loop for specified duration (number of 'marks') for WRITE benchmark
-
-         /*
-           Persist info about the Write BM Run (e.g. into Derby Database) and add it to a GUI panel
-          */
-        EntityManager em = EM.getEntityManager();
-        em.getTransaction().begin();
-        em.persist(run);
-        em.getTransaction().commit();
-
-        Gui.runPanel.addRun(run);
-
+        // Notify any observers of this subject class to update their data
+        notifyObservers();
         return true;
+    }
+
+    /**
+     * Registers an observer of the WriteCommand subject class to be notified
+     * @param observer
+     */
+    @Override
+    public void registerObserver(ObserverInterface observer) {
+        observerList.add(observer);
+    }
+    /**
+     * Unregisters an observer of the WriteCommand subject class to no longer be notified
+     * @param observer
+     */
+    @Override
+    public void unregisterObserver(ObserverInterface observer) {
+        observerList.remove(observer);
+    }
+    /**
+     * Notifies any registered observers
+     */
+    @Override
+    public void notifyObservers() {
+        for (ObserverInterface observer : observerList) {
+            observer.update(run);
+        }
     }
 }

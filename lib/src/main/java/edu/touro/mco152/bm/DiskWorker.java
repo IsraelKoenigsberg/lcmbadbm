@@ -1,9 +1,11 @@
 package edu.touro.mco152.bm;
 
-import edu.touro.mco152.bm.commands.CommandInterface;
 import edu.touro.mco152.bm.commands.ReadCommand;
 import edu.touro.mco152.bm.commands.SimpleInvoker;
 import edu.touro.mco152.bm.commands.WriteCommand;
+import edu.touro.mco152.bm.observerPattern.ObservableInterface;
+import edu.touro.mco152.bm.slack.SlackObserver;
+import edu.touro.mco152.bm.persist.DatabasePersistenceObserver;
 import edu.touro.mco152.bm.ui.Gui;
 
 import javax.swing.*;
@@ -29,7 +31,7 @@ import static edu.touro.mco152.bm.App.*;
 public class DiskWorker {
     GUIInterface guiInterface;
     WriteCommand write = new WriteCommand(numOfMarks, numOfBlocks, blockSizeKb, blockSequence);
-    CommandInterface read = new ReadCommand(numOfMarks, numOfBlocks, blockSizeKb, blockSequence);
+    ReadCommand read = new ReadCommand(numOfMarks, numOfBlocks, blockSizeKb, blockSequence);
     SimpleInvoker invoker = new SimpleInvoker();
     boolean benchmarkOperationsSuccessful = false;
 
@@ -60,14 +62,28 @@ public class DiskWorker {
        Overrides the execute method from CommandInterface, in line with the Command Pattern.
         */
             // Invoke a WriteCommand
-            if (writeTest) benchmarkOperationsSuccessful = invoker.invoke(write, guiInterface);
+            if (writeTest) {
+                observerRegisterController(write);
+                benchmarkOperationsSuccessful = invoker.invoke(write, guiInterface);
+
+            }
             // try renaming all files to clear catch
             tryRenamingAllFilesToClearCatch();
             // Invoke a ReadCommand
-            if (readTest) benchmarkOperationsSuccessful = invoker.invoke(read, guiInterface);
+            if (readTest) {
+                observerRegisterController(read);
+                benchmarkOperationsSuccessful = invoker.invoke(read, guiInterface);
+
+            }
             nextMarkNumber += numOfMarks;
             return benchmarkOperationsSuccessful;
         });
+    }
+
+    private void observerRegisterController(ObservableInterface observable) {
+        observable.registerObserver(new DatabasePersistenceObserver());
+        observable.registerObserver(new Gui());
+        observable.registerObserver(new SlackObserver());
     }
 
     public void tryRenamingAllFilesToClearCatch() {
